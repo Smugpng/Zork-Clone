@@ -1,0 +1,7 @@
+namespace Zork
+{
+    public static class Assert
+    {
+
+    }
+}
