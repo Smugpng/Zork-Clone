@@ -20,9 +20,15 @@ namespace Zork
         }  
         static void Main(string[] args)
         {
-            InitializeRoomDescriptions();
             Console.WriteLine("Welcome to Zork!");
+            InitializeRoomDescriptions();
 
+            Room previousRoom = null;
+            if(previousRoom != CurrentRoom)
+            {
+                Console.WriteLine(CurrentRoom.Description);
+                previousRoom = CurrentRoom;
+            }
             Commands command = Commands.UNKOWN;
             while (command != Commands.QUIT)
             {
@@ -107,17 +113,22 @@ namespace Zork
         };
         private static void InitializeRoomDescriptions()
         {
-            Rooms[0, 0].Description = "You are on a rock-strew trail.";//Rocky trail
-            Rooms[0, 1].Description = "You are facing the south side of a white house. These is no door here, and all the windows are barrded."; //south of house
-            Rooms[0, 2].Description = "You are at the top of the Great canyon on its south wall";//canyon view
+            var roomMap = new Dictionary<string, Room>();
+            foreach (Room room in Rooms)
+            {
+                roomMap[room.Name] = room;
+            }
+            roomMap["Rocky Trail"].Description = "You are on a rock-strew trail.";//Rocky trail
+            roomMap["South Of House"].Description = "You are facing the south side of a white house. These is no door here, and all the windows are barrded.";//south of house
+            roomMap["Canyon View"].Description = "You are at the top of the Great canyon on its south wall";//canyon view
 
-            Rooms[1, 0].Description = "This is a forest, with trees in all directions around you";//forest
-            Rooms[1, 1].Description = "this is an open field west of a white house, with a boarded front door.";//west of house
-            Rooms[1, 2].Description = "You are behind the white house. In one corner of the house these is a small window that is slightly ajar/";//behind house
+            roomMap["Forest"].Description = "This is a forest, with trees in all directions around you";//forest
+            roomMap["West of House"].Description = "this is an open field west of a white house, with a boarded front door.";//west of house
+            roomMap["Behind House"].Description = "You are behind the white house. In one corner of the house these is a small window that is slightly ajar/"; //behind house
 
-            Rooms[2, 0].Description = "This is a dimly lit forest, with large trees all around. To the east, there appears to be sunlight/";//dense woods
-            Rooms[2, 1].Description = "You are facing the north side of a white house. These is no door here, and all the windows are barred";//north of house
-            Rooms[2, 2].Description = "You are in a clearing, with a forest surronding you on the west and south.";//clearing
+            roomMap["Dense Woods"].Description = "This is a dimly lit forest, with large trees all around. To the east, there appears to be sunlight/";//dense woods
+            roomMap["North of House"].Description = "You are facing the north side of a white house. These is no door here, and all the windows are barred";//north of house
+            roomMap["Clearing"].Description = "You are in a clearing, with a forest surronding you on the west and south.";//clearing
         }
 
         private static (int Row, int Column) Location = (1, 1);
