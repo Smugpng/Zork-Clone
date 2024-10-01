@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Security;
 using System.Text;
@@ -11,6 +12,18 @@ namespace Zork
 
     class Program
     {
+        static Program()
+        {
+            roomMap = new Dictionary<string, Room>();  
+            foreach (Room room in Rooms)
+            {
+                roomMap[room.Name] = room;
+            }            var roomMap = new Dictionary<string, Room>();
+            foreach (Room room in Rooms)
+            {
+                roomMap[room.Name] = room;
+            }
+        }
         private static Room CurrentRoom
         {
             get
@@ -111,24 +124,29 @@ namespace Zork
             {new Room("Forest"), new Room("West of House"), new Room("Behind House") },
             {new Room("Dense Woods"), new Room("North of House"), new Room("Clearing") }
         };
-        private static void InitializeRoomDescriptions()
+        private static void InitializeRoomDescriptions(string roomsFilename)
         {
-            var roomMap = new Dictionary<string, Room>();
-            foreach (Room room in Rooms)
+            const string fieldDelimiter = "##";
+            const int expectedFieldCount = 2;
+
+            string[] lines = File.ReadAllLines(roomsFilename);
+            foreach (string line in lines)
             {
-                roomMap[room.Name] = room;
+                string[] fields = line.Split(fieldDelimiter);
+                if(fields.Length != expectedFieldCount)
+                {
+                    throw new InvalidDataException("Invalid Record.");
+                }
+                string name = fields[(int)Fields.Name];
+                string description = fields[(int)Feilds.Description];
+
+                roomMap[name].Description = description;
             }
-            roomMap["Rocky Trail"].Description = "You are on a rock-strew trail.";//Rocky trail
-            roomMap["South Of House"].Description = "You are facing the south side of a white house. These is no door here, and all the windows are barrded.";//south of house
-            roomMap["Canyon View"].Description = "You are at the top of the Great canyon on its south wall";//canyon view
-
-            roomMap["Forest"].Description = "This is a forest, with trees in all directions around you";//forest
-            roomMap["West of House"].Description = "this is an open field west of a white house, with a boarded front door.";//west of house
-            roomMap["Behind House"].Description = "You are behind the white house. In one corner of the house these is a small window that is slightly ajar/"; //behind house
-
-            roomMap["Dense Woods"].Description = "This is a dimly lit forest, with large trees all around. To the east, there appears to be sunlight/";//dense woods
-            roomMap["North of House"].Description = "You are facing the north side of a white house. These is no door here, and all the windows are barred";//north of house
-            roomMap["Clearing"].Description = "You are in a clearing, with a forest surronding you on the west and south.";//clearing
+        }
+        private enum Fields
+        {
+            Name = 0,
+            Description
         }
 
         private static (int Row, int Column) Location = (1, 1);
