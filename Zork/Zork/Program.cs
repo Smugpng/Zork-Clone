@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.IO;
@@ -6,38 +7,36 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Zork
 {
 
     class Program
     {
-        static Program()
-        {
-            roomMap = new Dictionary<string, Room>();  
-            foreach (Room room in Rooms)
-            {
-                roomMap[room.Name] = room;
-            }            var roomMap = new Dictionary<string, Room>();
-            foreach (Room room in Rooms)
-            {
-                roomMap[room.Name] = room;
-            }
-        }
+        private static Room[,] Rooms;
         private static Room CurrentRoom
         {
             get
             {
                 return Rooms[Location.Row, Location.Column];
             }
-        }  
+        }
+        private enum CommandLineArguments
+        {
+            RoomsFilename = 0
+        }
         static void Main(string[] args)
         {
+            const string defaultRoomsFileName = "Rooms.json";
+            string roomsFileName = (args.Length > 0 ? args[(int)CommandLineArguments.RoomsFilename] : defaultRoomsFileName);
+                string roomsFilename = "Rooms.json";
+
+            InitializeRoomDescriptions(roomsFilename);
             Console.WriteLine("Welcome to Zork!");
-            InitializeRoomDescriptions();
 
             Room previousRoom = null;
-            if(previousRoom != CurrentRoom)
+            if (previousRoom != CurrentRoom)
             {
                 Console.WriteLine(CurrentRoom.Description);
                 previousRoom = CurrentRoom;
@@ -78,8 +77,8 @@ namespace Zork
         private static bool Move(Commands command)
         {
             Assert.IsTrue(IsDirection(command), "Invalid direction.");
-            
-            
+
+
             bool isValidMove = true;
             switch (command)
             {
@@ -99,13 +98,15 @@ namespace Zork
                     Location.Column--;
                     break;
 
-                default :
+                default:
                     isValidMove = false;
                     break;
             }
             return isValidMove;
 
         }
+        
+        
 
         private static Commands ToCommand(string commandString) => (Enum.TryParse<Commands>(commandString, true, out Commands result) ? result : Commands.UNKOWN);
 
@@ -124,25 +125,7 @@ namespace Zork
             {new Room("Forest"), new Room("West of House"), new Room("Behind House") },
             {new Room("Dense Woods"), new Room("North of House"), new Room("Clearing") }
         };
-        private static void InitializeRoomDescriptions(string roomsFilename)
-        {
-            const string fieldDelimiter = "##";
-            const int expectedFieldCount = 2;
-
-            string[] lines = File.ReadAllLines(roomsFilename);
-            foreach (string line in lines)
-            {
-                string[] fields = line.Split(fieldDelimiter);
-                if(fields.Length != expectedFieldCount)
-                {
-                    throw new InvalidDataException("Invalid Record.");
-                }
-                string name = fields[(int)Fields.Name];
-                string description = fields[(int)Feilds.Description];
-
-                roomMap[name].Description = description;
-            }
-        }
+        private static void InitializeRoomDescriptions(string roomsFilename) => Rooms = JsonConvert.DeserializeObject<Room[,]>(File.ReadAllText(roomsFilename));
         private enum Fields
         {
             Name = 0,
@@ -150,6 +133,7 @@ namespace Zork
         }
 
         private static (int Row, int Column) Location = (1, 1);
+        private static Dictionary<string, Room> roomMap;
     }
 }
 
