@@ -10,8 +10,8 @@
     {
             "Name": "Canyon View"
             "Description": "You are on top of the great canyon on its south wall"
-        },
-        {
+    },
+    {
         "Name":"Forest"
         "Description": "This is a forest, with trees in all directions around you"
     },

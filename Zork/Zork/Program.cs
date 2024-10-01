@@ -14,7 +14,6 @@ namespace Zork
 
     class Program
     {
-        private static Room[,] Rooms;
         private static Room CurrentRoom
         {
             get
@@ -32,7 +31,7 @@ namespace Zork
             string roomsFileName = (args.Length > 0 ? args[(int)CommandLineArguments.RoomsFilename] : defaultRoomsFileName);
                 string roomsFilename = "Rooms.json";
 
-            InitializeRoomDescriptions(roomsFilename);
+            InitializeRooms(roomsFilename);
             Console.WriteLine("Welcome to Zork!");
 
             Room previousRoom = null;
@@ -125,7 +124,7 @@ namespace Zork
             {new Room("Forest"), new Room("West of House"), new Room("Behind House") },
             {new Room("Dense Woods"), new Room("North of House"), new Room("Clearing") }
         };
-        private static void InitializeRoomDescriptions(string roomsFilename) => Rooms = JsonConvert.DeserializeObject<Room[,]>(File.ReadAllText(roomsFilename));
+        private static void InitializeRooms(string roomsFilename) => Rooms = JsonConvert.DeserializeObject<Room[,]>(File.ReadAllText(roomsFilename));
         private enum Fields
         {
             Name = 0,
@@ -133,7 +132,6 @@ namespace Zork
         }
 
         private static (int Row, int Column) Location = (1, 1);
-        private static Dictionary<string, Room> roomMap;
     }
 }
 
