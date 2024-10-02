@@ -14,6 +14,15 @@ namespace Zork
 
     class Program
     {
+        public static Game Load(string filename)
+        {
+            Game game = JsonConvert.DeserializeObject<Game>(File.ReadAllText(filename));
+            return game;
+        }
+        public class Game
+        {
+            public World World { get; }
+        }
         private static Room CurrentRoom
         {
             get
@@ -118,12 +127,7 @@ namespace Zork
             Commands.EAST,
             Commands.WEST
         };
-        private static readonly Room[,] Rooms =
-        {
-            {new Room("Rocky Trail"),new Room("South Of House"), new Room("Canyon View") },
-            {new Room("Forest"), new Room("West of House"), new Room("Behind House") },
-            {new Room("Dense Woods"), new Room("North of House"), new Room("Clearing") }
-        };
+        private static Room[,] Rooms ;
         private static void InitializeRooms(string roomsFilename) => Rooms = JsonConvert.DeserializeObject<Room[,]>(File.ReadAllText(roomsFilename));
         private enum Fields
         {
