@@ -153,6 +153,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Scripts\HELLO.csx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Compile Include="Restart.cs" />
     <Compile Include="Quit.cs" />
     <Compile Include="Look.cs" />
