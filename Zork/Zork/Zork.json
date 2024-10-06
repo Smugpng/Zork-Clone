@@ -1,7 +1,7 @@
 {
   "WelcomeMessage": "Welcome to ZORK",
   "World": {
-    "Starting Location": "West of House",
+    "StartingLocation": "West of House",
     "Rooms": [
       {
         "Name": "West of House",
@@ -9,7 +9,7 @@
         "Neighbors": {
           "North": "North of House",
           "South": "South of House",
-          "West": "Forest 1;"
+          "West": "Forest 1"
         }
       },
       {
@@ -18,7 +18,7 @@
         "Neighbors": {
           "North": "Forest 2",
           "East": "Behind House",
-          "West": "West of House;"
+          "West": "West of House"
         }
       },
       {
@@ -35,7 +35,7 @@
         "Neighbors": {
           "North": "North of House",
           "East": "Clearing",
-          "South": "South of House;"
+          "South": "South of House"
         }
       },
       {
